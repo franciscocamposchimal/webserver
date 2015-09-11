@@ -1,0 +1,30 @@
+# Instalar Ajenti
+apt-get update
+wget http://repo.ajenti.org/debian/key -O- | apt-key add -
+echo "deb http://repo.ajenti.org/ng/debian main main ubuntu" >> /etc/apt/sources.list
+apt-get update
+apt-get install ajenti
+service ajenti restart
+
+# Instalar Ajenti-v (soporte para manejo simple de vhosts)
+apt-get install ajenti-v ajenti-v-nginx ajenti-v-mysql ajenti-v-php-fpm php5-mysql 
+
+# Si se requiere ruby
+apt-get install ajenti-v-ruby-unicorn ajenti-v-ruby-puma
+
+# Si se requiere python
+apt-get install ajenti-v-python-gunicorn
+
+# Si se requiere nodeJS
+apt-get install ajenti-v-nodejs
+
+# Si queremos el soporte para gmail
+apt-get install ajenti-v-mail
+
+# Si queremos soporte POP
+apt-get install courier-pop
+
+# Reiniciar todos los revicios
+sudo service php5-fpm restart
+sudo service nginx restart
+sudo service ajenti restart
