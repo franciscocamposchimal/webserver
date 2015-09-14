@@ -1,0 +1,44 @@
+server {
+        # Base
+        listen    80;
+        server_name sitio.com;
+        server_name www.sitio.com;
+        root /var/www/html/sitio.com/drop;
+        index index.html index.htm index.php;
+
+        # Procesar archivos del raíz y ocultar el listado de archivos cuando no hay index
+        location / {
+                try_files $uri $uri/ =404;
+                autoindex off;
+        }
+
+        # Para todos los archivos estaticos, se activa el cache al máximo
+        location ~* .(gif|jpg|jpeg|png|ico|wmv|3gp|avi|mpg|mpeg|mp4|flv|mp3|mid|js|css|wml|swf)$ {
+                expires max;
+                add_header Pragma public;
+                add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+        }
+
+        # Denegar el listado de archivos ocultos
+        location ~ /\.ht {
+                deny all;
+        }
+
+        # Procesar archivos php (por fastcgi)
+        location ~ [^/]\.php(/|$) {
+                fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+                if (!-f $document_root$fastcgi_script_name) {
+                        return 404;
+                }
+                fastcgi_pass unix:/var/run/php5-fpm.sock;
+                fastcgi_index index.php;
+                include fastcgi_params;
+        }
+
+        # Para sfphp
+        if (!-e $request_filename){
+                rewrite ^(.+)$ /index.php?url=$1 break;
+        }
+
+        error_log /var/www/__logs/sitio.com.error error;
+}
