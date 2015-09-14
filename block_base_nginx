@@ -3,7 +3,7 @@ server {
         listen    80;
         server_name sitio.com;
         server_name www.sitio.com;
-        root /var/www/html/sitio.com/drop;
+        root /var/www/html/sitio.com;
         index index.html index.htm index.php;
 
         # Procesar archivos del raíz y ocultar el listado de archivos cuando no hay index
